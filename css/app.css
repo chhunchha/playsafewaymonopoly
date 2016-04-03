@@ -1,0 +1,46 @@
+body {
+	padding: 10px;
+	font-size: 16px !important;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+/****************/
+
+.heading-lbl {
+	font-weight: 500;
+	font-size: 18px;
+	margin-top: 5px;
+}
+
+.sc-float-left {
+	float: left;
+}
+
+.sc-float-right {
+	float: right;
+}
+
+/*****************/
+
+.content {
+	height: calc(100% - 50px);
+	position: absolute;
+	top: 80px;
+	left: 0px;
+	width: 100%;
+	overflow: hidden;
+	background: #f3f3f3;
+	padding: 20px;
+}
+
+.profileImage {
+	height: 40px;
+	width: 40px;
+	margin-top: -10px !important;
+	border-radius: 50%;
+}
+
+.headerField {
+	display: inline-block;
+	vertical-align: middle;
+}

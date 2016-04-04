@@ -1,0 +1,9 @@
+{
+  "firebase": "playsafewaymonopoly",
+  "public": "/",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}

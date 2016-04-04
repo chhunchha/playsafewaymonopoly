@@ -1,41 +1,129 @@
 
 <html ng-app="playsafewaymonopoly">
-	<head>
-		<meta charset="UTF-8">
-		<title>Play Monopoly Together</title>
+<head>
+	<meta charset="UTF-8">
+	<title>Play Monopoly Together</title>
 
-		<!-- Firebase -->
-		<script src="https://cdn.firebase.com/js/client/2.2.7/firebase.js"></script>
+	<!-- Firebase -->
+	<script src="https://cdn.firebase.com/js/client/2.2.7/firebase.js"></script>
 
-		<!-- Angular -->
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js"></script>
+	<!-- Angular -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js"></script>
 
-		<!-- AngularFire -->
-		<script src="https://cdn.firebase.com/libs/angularfire/1.1.1/angularfire.min.js"></script>
-		<script src="js/app.js"></script>
+	<!-- AngularFire -->
+	<script src="https://cdn.firebase.com/libs/angularfire/1.1.1/angularfire.min.js"></script>
 
-		<link rel="stylesheet" href="css/app.css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-	</head>
-	<body ng-controller="AuthCtrl">
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header" ng-show="authData">
-          <a class="navbar-brand" href="">
-            <img class="profileImage" ng-src="{{getUserImage()}}"/>
-          </a>
-        </div>
-        <p ng-show="authData" class="navbar-text">{{cachedProfile.name}} - {{cachedProfile.email}}</p>
 
-        <ul class="nav navbar-nav navbar-right">
-          <li ng-click="login('google')" ng-hide="authData"><a href>Login With Google</a></li>
-          <li ng-click="logout()" ng-show="authData"><a href>Logout</a></li>
-        </ul>
-      </div>
-    </nav>
+	<script src="js/app.js"></script>
 
-    <div class="content" ng-show="authData">
+	<link rel="stylesheet" href="css/app.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<body ng-controller="playCntrl">
+	<nav class="navbar navbar-default navbar-fixed-top navbar-collapse">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">Play Monopoly Together</a>
+			<div class="navbar-header" ng-show="authData">
+			</div>
 
-		    </div>
-	</body>
+			<ul class="nav navbar-nav" ng-if="authData">
+				<li ng-click="nav.tabIndex = 1" ng-class="{'active' : nav.tabIndex == 1}"><a href="#">My Board</a></li>
+				<li ng-click="nav.tabIndex = 2" ng-class="{'active' : nav.tabIndex == 2}"><a href="#">Profile</a></li>
+				<li ng-click="nav.tabIndex = 3" ng-class="{'active' : nav.tabIndex == 3}"><a href="#">Find tickets</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<!-- <button type="button" class="btn btn-default navbar-btn" ng-click="login('google')"  ng-hide="authData">Sign in</button> -->
+				<!-- <button type="button" class="btn btn-default navbar-btn" ng-click="logout()"  ng-show="authData">Logout</button> -->
+				<li ng-click="login('google')" ng-hide="authData"><a href>Sign In</a></li>
+				<li ng-click="logout()" ng-show="authData"><a href>Logout</a></li>
+			</ul>
+		</div>
+	</nav>
+	<div class="container" ng-show="!authData">
+		<div class="row welcome" style="margin-top: 100px;">
+			<div class="col-md-3 col-lg-3">
+			</div>
+			<div class="col-md-6 col-lg-6">
+				<h3>Lets play together and beat the system!!</h3>
+				<p>
+					I am also trying to win something from this Safeway monopoly game. Haven't won anything yet.
+					Many people must be getting same tickets again and again like me, and somebody might not be getting that ticket at all.
+					May be somebody need what I have and somebody might have one extra which I need. So below is the idea.
+				</p>
+				<h3>How this should work</h3>
+				<ul>
+					<li>
+						Manage your board by marking tickets which you have.
+					</li>
+					<li>
+						Use + and - icon to keep count of repeating ticket - keep those tickets.
+					</li>
+					<li>
+						Zipcode you will enter in your profile will help in finding other people in area who might have tickets you wanted.
+						or search using nearby zipcodes for tickets. Will look for tickets which you don't have.
+					</li>
+					<li>
+						Contact them and make arrangement for getting ticket. What will be the arrangement, that is upto you.
+					</li>
+					<li>
+						Donate me if this site helped you in winning something great.
+					</li>
+				</ul>
+			</div>
+			<div class="col-md-3 col-lg-3">
+			</div>
+		</div>
+	</div>
+	<div class="container" ng-show="authData && (nav.tabIndex == 1)" style="padding-top:60px">
+		<div class="row">
+			<div class="userInfo">
+				<a class="navbar-brand" href="">
+					<img class="profileImage" ng-src="{{getUserImage()}}"/>
+				</a>
+				<span class="username">{{cachedProfile.name}} - {{cachedProfile.email}}</span>
+			</div>
+			<div class="col-md-12 col-xs-12 col-lg-12">
+				<div ng-repeat="(key, prize) in userBoard.data">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">{{prize.name}}</h3>
+						</div>
+						<div class="panel-body">
+							<div ng-repeat="(key ,ticket) in prize.tickets">
+								<div class="ticket">
+									<div class="code">
+										{{ticket.code}}
+									</div>
+									<div class="status" ng-class="{'iHaveIt' : ticket.status}">
+										<div class="status-button cursor-pointer" ng-click="ticket.status = !ticket.status; userBoard.$save();">
+											<span  class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+											<!-- <span ng-if="ticket.status" ng-click="ticket.status = !ticket.status" class="glyphicon glyphicon-remove" aria-hidden="true"></span> -->
+										</div>
+									</div>
+									<div class="extras">
+										<span ng-if="ticket.extra > 0" ng-click="ticket.extra = ticket.extra - 1; userBoard.$save();" class="glyphicon glyphicon-minus cursor-pointer" aria-hidden="true"></span>
+										<span>{{ticket.extra}}</span>
+										<span ng-click="ticket.extra = ticket.extra + 1; userBoard.$save();" class="glyphicon glyphicon-plus cursor-pointer" aria-hidden="true"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container" ng-show="authData && nav.tabIndex == 3" style="padding-top:60px">
+
+	</div>
+	<div class="container" ng-show="authData && nav.tabIndex == 2" style="padding-top:60px">
+		<form name="profile-frm">
+			<div class="form-group">
+				<label for="zipcode">Zipcode:</label>
+				<input type="text" class="form-control" id="zipcode" placeholder="Zipcode" ng-model="user.zipcode"/>
+			</div>
+			<button type="submit" class="btn btn-primary" ng-click="user.$save(); nav.tabIndex=1;">Submit</button>
+		</form>
+	</div>
+</body>

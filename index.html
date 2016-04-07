@@ -29,7 +29,7 @@
 	<link rel="stylesheet" href="css/app.css">
 </head>
 <body ng-controller="playCntrl">
-	<nav class="navbar navbar-default" navbar-fixed-top>
+	<nav class="navbar navbar-default navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="./">Play Monopoly Together</a>
@@ -59,7 +59,7 @@
 			</div>
 	  	</div>
 	</nav>
-	<div class="container" ng-show="!authData">
+ 	<div class="container main" ng-show="!authData">
 		<div class="row">
 			<div class="col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1 col-xs-12">
 				<div class="panel panel-default">
@@ -76,17 +76,13 @@
 								Manage your board by marking tickets which you have.
 							</li>
 							<li>
-								Use + and - icon to keep count of repeating ticket - keep those tickets.
+								Use + and - icon to keep count of repeating ticket. ( I hope you have kept those repeating tickets.)
 							</li>
 							<li>
-								City you will enter in your profile will help in finding other people in area who might have tickets you want.
-								or search using nearby zipcodes for tickets. Will look for tickets which you don't have.
+								Will search for people who has extra tickets which you don't have in your city.
 							</li>
 							<li>
-								Contact them and make arrangement for getting ticket. What will be the arrangement, that is upto you.
-							</li>
-							<li>
-								Donate me if this site helped you in winning something great.
+								Contact them and make arrangement for getting ticket. What will be the arrangement? - that is upto you.
 							</li>
 						</ul>
 					</div>
@@ -94,7 +90,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="container" ng-show="authData && nav.tabIndex == 1">
+	<div class="container main" ng-show="authData && nav.tabIndex == 1">
 		<div class="row">
 			<div class="userInfo col-md-12 col-lg-12 col-xs-12">
 				<a class="navbar-brand" href="">
@@ -135,15 +131,29 @@
 			</div>
 		</div>
 	</div>
-	<div class="container" ng-show="authData && nav.tabIndex == 2">
+ 	<div class="container main" ng-show="authData && nav.tabIndex == 2">
 		<div class="row">
 			<div class="col-md-4 col-md-offset-2 col-lg-4 col-lg-offset-2 col-xs-6">
 				<div class="panel panel-default">
 					<div class="panel-body">
 						<ul class="list-group">
-							<li class="list-group-item list-group-item-info">State : {{user.state.name}}</li>
-							<li class="list-group-item list-group-item-info">County  : {{user.county.name}}</li>
-							<li class="list-group-item list-group-item-info">City    : {{user.city.name}}</li>
+							<div class="form-group">
+								<label for="state">State:</label>
+								<input disabled class="form-control" ng-model="user.state.name"/>
+								<!-- <li class="list-group-item list-group-item-info">{{user.state.name}}</li> -->
+							</div>
+							<div class="form-group">
+								<label for="state">County:</label>
+								<input disabled class="form-control" ng-model="user.county.name"/>
+
+								<!-- <li class="list-group-item list-group-item-info">{{user.county.name}}</li> -->
+							</div>
+							<div class="form-group">
+								<label for="state">City:</label>
+								<input disabled class="form-control" ng-model="user.city.name"/>
+
+								<!-- <li class="list-group-item list-group-item-info">{{user.city.name}}</li> -->
+							</div>
 						</ul>
 					</div>
 				</div>
@@ -204,9 +214,11 @@
 			</div>
 		</div>
 	</div>
-	<div class="container" ng-show="authData && nav.tabIndex == 3">
+ 	<div class="container main" ng-show="authData && nav.tabIndex == 3">
 		<div class="row">
 			<div class="col-md-12 col-lg-12 col-xs-12">
+				<div class="alert alert-danger" role="alert" ng-if="user.city == undefiend">
+					<strong>Set your profile city</strong></div>
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h4><strong>
@@ -214,12 +226,6 @@
 						</strong></h4>
 					</div>
 					<div class="panel-body">
-						<div class="form-group col-md-2 col-xs-12 col-lg-2">
-							<label >Total results : </label>
-							<div class="noOfResults">
-								<label>{{usersWithExtraTickets.results.length}} </label>
-							</div>
-						</div>
 						<div class="form-group col-md-2 col-xs-12 col-lg-2">
 							<label for="city">City:</label>
 							<div class="dropdown">
@@ -238,6 +244,20 @@
 						<div class="form-group col-md-2 col-xs-12 col-lg-2">
 							<label for="resultFilter">Filter: </label>
 							<input type="text" class="form-control" ng-model="searchText" id="resultFilter" placeholder="Search"/>
+						</div>
+						<div class="form-group col-md-4 col-xs-12 col-lg-4">
+							<div style="padding-top: 30px;">Found <strong> {{usersWithExtraTickets.results.length}} </strong> users in <strong> {{searchInCity.name}}</strong> for your <strong>{{missingTickets.length}}</strong> missing tickets.</div>
+							<!-- <div class="noOfResults">
+								<label>{{usersWithExtraTickets.results.length}} </label>
+							</div> -->
+						</div>
+						<div class="form-group col-md-4 col-xs-12 col-lg-4">
+							<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+								<input type="hidden" name="cmd" value="_s-xclick">
+								<input type="hidden" name="hosted_button_id" value="27AG69EHZY9HW">
+								<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+								<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+							</form>
 						</div>
 					</div>
 					<div class="table-responsive results">

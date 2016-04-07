@@ -199,6 +199,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 
 	$scope.missingTickets = [];
 	var getMyMissingTickets = function() {
+		$scope.missingTickets = [];
 		for(i in $scope.userBoard.data)
 		{
 			var prize = $scope.userBoard.data[i];
@@ -271,6 +272,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$scope.searchForMissingTickets = function() {
 		$scope.searchInCity = $scope.user.city;
 		$scope.getCities($scope.user.county.name, $scope.user.county.geonameId);
+		$scope.usersWithExtraTickets = {results: []};
 		getMyMissingTickets();
 	}
 

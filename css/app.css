@@ -52,6 +52,9 @@ body {
     background-color: rgba(255, 255, 255, 0.5) !important;
 }
 
+.main {
+	padding-top: 60px;
+}
 .welcome {
 	font-size: 18px;
 	background: white;
@@ -129,6 +132,9 @@ body {
     padding: 15px;
 }
 
+.status-button:hover {
+	background-color: #f0f0f0;
+}
 .cursor-pointer {
 	cursor: pointer;
 }

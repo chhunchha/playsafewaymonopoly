@@ -146,3 +146,8 @@ table {
 tr:hover {
 	background-color: #f0f0f0;
 }
+
+.noOfResults {
+	line-height: 20px;
+	padding-left: 7px;
+}

@@ -251,6 +251,13 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 		);
 	}
 
+	var getUsersInTheCityWithExtraTickets = function() {
+		$scope.usersWithExtraTickets = {results: []};
+		angular.forEach($scope.missingTickets, function(ticket){
+			getUsersInTheCityWithThisExtraTicket($scope.searchInCity.geonameId, ticket.code)
+		})
+	}
+
 	$scope.selectedTicketCode = "Select Ticket";
 	$scope.selectTicketCode = function(key) {
 		$scope.selectedTicketCode = key;
@@ -258,7 +265,9 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 
 	$scope.selectSearchInCity = function(name, geonameId) {
 		$scope.searchInCity = {name: name, geonameId: geonameId};
+		getUsersInTheCityWithExtraTickets();
 	}
+
 	$scope.searchForMissingTickets = function() {
 		$scope.searchInCity = $scope.user.city;
 		$scope.getCities($scope.user.county.name, $scope.user.county.geonameId);

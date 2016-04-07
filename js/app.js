@@ -214,14 +214,13 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 		console.log($scope.missingTickets);
 	}
 
-	$scope.usersWithExtraTickets = {results: {'Select Ticket' : []}};
+	$scope.usersWithExtraTickets = {results: []};
 	var getUsersInTheCityWithThisExtraTicket = function(cityGeoNameId, ticketCode) {
 		var thisCityUsersRef = new Firebase(appURL + "/city_users/" + cityGeoNameId);
 		var cityUsers = $firebaseArray(thisCityUsersRef);
 
 		cityUsers.$loaded(
 			function(x) {
-				$scope.usersWithExtraTickets.results[ticketCode] = [];
 				if(cityUsers.length != 0)
 				{
 					angular.forEach( cityUsers, function(cityUser){
@@ -236,7 +235,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 										{
 											var ticket = prize.tickets[t];
 											if(ticket.code === ticketCode && ticket.extra > 0 ) {
-												$scope.usersWithExtraTickets.results[ticketCode].push(cityUser.user);
+												$scope.usersWithExtraTickets.results.push({ticket: ticketCode, user: $firebaseObject(userRef.child(cityUser.user))});
 											}
 										}
 									}
@@ -265,9 +264,11 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 		$scope.getCities($scope.user.county.name, $scope.user.county.geonameId);
 		getMyMissingTickets();
 	}
+
+	$scope.searchText = "";
 };
 
-var app = angular.module("playsafewaymonopoly", ["firebase","ngRoute"]);
+var app = angular.module("playsafewaymonopoly", ["firebase","ngRoute",'customFilter']);
 
 app.config(['$routeProvider', '$locationProvider',function($routeProvider, $locationProvider){
 	$routeProvider
@@ -285,3 +286,20 @@ app.factory("Auth", function($firebaseAuth){
 });
 
 app.controller('playCntrl', PlayCntrl);
+
+angular.module('customFilter',[])
+.filter('custom', function() {
+  return function(input, search) {
+    if (!input) return input;
+    if (!search) return input;
+    var expected = ('' + search).toLowerCase();
+    var result = {};
+    angular.forEach(input, function(value, key) {
+      var actual = ('' + value).toLowerCase();
+      if (actual.indexOf(expected) !== -1) {
+        result[key] = value;
+      }
+    });
+    return result;
+  }
+});

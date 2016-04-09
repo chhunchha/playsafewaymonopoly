@@ -53,6 +53,14 @@
 				<ul class="nav navbar-nav navbar-right">
 					<!-- <button type="button" class="btn btn-default navbar-btn" ng-click="login('google')"  ng-hide="authData">Sign in</button> -->
 					<!-- <button type="button" class="btn btn-default navbar-btn" ng-click="logout()"  ng-show="authData">Logout</button> -->
+					<li style="top: 13px;">
+						<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" ng-show="authData">
+							<input type="hidden" name="cmd" value="_s-xclick">
+							<input type="hidden" name="hosted_button_id" value="27AG69EHZY9HW">
+							<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+							<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+						</form>
+					</li>
 					<li ng-click="login('google')" ng-hide="authData"><a href>Sign In</a></li>
 					<li ng-click="logout()" ng-show="authData"><a href>Logout</a></li>
 				</ul>
@@ -93,21 +101,31 @@
 	<div class="container main" ng-show="authData && nav.tabIndex == 1">
 		<div class="row">
 			<div class="userInfo col-md-12 col-lg-12 col-xs-12">
-				<a class="navbar-brand" href="">
+				<a class="" href="">
 					<img class="profileImage" ng-src="{{getUserImage()}}"/>
 				</a>
 				<span class="username">{{cachedProfile.name}} - {{cachedProfile.email}}</span>
 			</div>
 		</div>
+		<div class="row searchRow">
+			<div class=" col-md-6 col-lg-6 col-xs-12">
+				<label for="searchPrize">Search Prize: </label>
+				<input type="text" class="form-control" ng-model="searchPrize" id="searchPrize" placeholder="Prize"/>
+			</div>
+			<div class=" col-md-6 col-lg-6 col-xs-12">
+				<label for="searchTicket">Search Ticket: </label>
+				<input type="text" class="form-control" ng-model="searchTicket" id="searchTicket" placeholder="Ticket Code"/>
+			</div>
+		</div>
 		<div class="row">
 			<div class="col-md-12 col-xs-12 col-lg-12">
-				<div ng-repeat="(key, prize) in userBoard.data">
+				<div ng-repeat="(key, prize) in userBoard.data | toArray | orderBy: '-value' | filter:{$:searchPrize}">
 					<div class="panel panel-default">
-						<div class="panel-heading">
+						<div class="panel-heading header-color-{{prize.color}}">
 							<h3 class="panel-title">{{prize.name}}</h3>
 						</div>
 						<div class="panel-body">
-							<div ng-repeat="(key ,ticket) in prize.tickets">
+							<div ng-repeat="(key ,ticket) in prize.tickets | toArray | filter:{$:searchTicket} ">
 								<div class="ticket">
 									<div class="code">
 										{{ticket.code}}
@@ -118,7 +136,7 @@
 											<!-- <span ng-if="ticket.status" ng-click="ticket.status = !ticket.status" class="glyphicon glyphicon-remove" aria-hidden="true"></span> -->
 										</div>
 									</div>
-									<div class="extras">
+									<div class="extras" ng-class="{'iHaveExtra' : ticket.extra > 0}">
 										<span ng-if="ticket.extra > 0" ng-click="ticket.extra = ticket.extra - 1; userBoard.$save();" class="glyphicon glyphicon-minus cursor-pointer" aria-hidden="true"></span>
 										<span>{{ticket.extra}}</span>
 										<span ng-click="ticket.extra = ticket.extra + 1; userBoard.$save();" class="glyphicon glyphicon-plus cursor-pointer" aria-hidden="true"></span>
@@ -246,19 +264,34 @@
 							<input type="text" class="form-control" ng-model="searchText" id="resultFilter" placeholder="Search"/>
 						</div>
 						<div class="form-group col-md-4 col-xs-12 col-lg-4">
-							<div style="padding-top: 30px;">Found <strong> {{usersWithExtraTickets.results.length}} </strong> users in <strong> {{searchInCity.name}}</strong> for your <strong>{{missingTickets.length}}</strong> missing tickets.</div>
+							<div style="padding-top: 22PX;">Found <strong> {{usersWithExtraTickets.results.length}} </strong> users in <strong> {{searchInCity.name}}</strong> for your <strong>{{missingTickets.length}}</strong> missing tickets.</div>
 							<!-- <div class="noOfResults">
 								<label>{{usersWithExtraTickets.results.length}} </label>
 							</div> -->
 						</div>
-						<div class="form-group col-md-4 col-xs-12 col-lg-4">
+						<div style="padding-top: 22px;" class="form-group col-md-4 col-xs-12 col-lg-4" ng-show="usersWithExtraTickets.results.length == 0">
+							Looks like not enough people. Spread the word and ask friends to join.
+						</div>
+						<div style="padding-top: 30px;" class="col-md-4 col-xs-12 col-lg-4" >
+							<!-- AddToAny BEGIN -->
+							<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+								<a style="line-height: 20px; padding-right: 5px;">Share</a>
+								<a class="a2a_button_facebook"></a>
+								<a class="a2a_button_twitter"></a>
+								<a class="a2a_button_google_plus"></a>
+								<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+							</div>
+							<script async src="https://static.addtoany.com/menu/page.js"></script>
+							<!-- AddToAny END -->
+						</div>
+						<!-- <div class="form-group col-md-4 col-xs-12 col-lg-4">
 							<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 								<input type="hidden" name="cmd" value="_s-xclick">
 								<input type="hidden" name="hosted_button_id" value="27AG69EHZY9HW">
 								<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
 								<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
 							</form>
-						</div>
+						</div> -->
 					</div>
 					<div class="table-responsive results">
 						<table class="table">

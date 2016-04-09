@@ -39,8 +39,8 @@ body {
 }
 
 .navbar-default {
-    background-color: rgba(237,29, 3,0.8) !important;
-    border-color: rgba(237,29, 3,0.8) !important;
+    background-color: rgba(237,29, 3, 1) !important;
+    border-color: rgba(237,29, 3, 1) !important;
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -72,7 +72,7 @@ body {
 }
 
 .userInfo {
-
+	text-align: right;
 }
 .userName {
 	margin: 15px 5px;
@@ -88,6 +88,16 @@ body {
 .panel-body {
 	background: rgba(255,255,255,0.8) !important;
 }
+
+.searchRow {
+	padding-bottom: 10px;
+	background: rgba(255, 255, 255, 0.7);
+}
+/*#searchPrize, #searchTicket {
+	width: 80%;
+	display: inline-block;
+}*/
+
 .ticket {
 	height: 200px;
 	width: 80px;
@@ -104,6 +114,8 @@ body {
 	line-height: 30px;
 	width: 100%;
 	border-bottom: 1px solid;
+	font-weight: 600;
+	font-size: 16px;
 }
 
 .status {
@@ -117,8 +129,13 @@ body {
 }
 
 .extras {
-	height: 30px;
+	height: 28px;
 	width: 100%;
+	line-height: 30px;
+}
+
+.iHaveExtra {
+	background-color: yellow;
 }
 
 .status-button {
@@ -156,4 +173,52 @@ tr:hover {
 .noOfResults {
 	line-height: 20px;
 	padding-left: 7px;
+}
+
+.panel-default {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	border: none !important;
+}
+
+.panel-title {
+	font-weight: 600 !important;
+	font-size: 16px !important;
+}
+
+.panel-heading.header-color-red {
+	background-color: rgb(237,29, 3);
+	color: white;
+}
+
+.panel-heading.header-color-brown {
+	background-color: #8B3B2A;
+	color: white;
+}
+
+.panel-heading.header-color-sky_blue {
+	background-color: #81ACCB;
+}
+
+.panel-heading.header-color-pink {
+	background-color: #9D0147;
+	color: white;
+}
+
+.panel-heading.header-color-orange {
+	background-color: #BD3E19;
+	color: white;
+}
+
+.panel-heading.header-color-blue {
+	background-color: #0B3B7E;
+	color: white;
+}
+
+.panel-heading.header-color-yellow {
+	background-color: #F7D961;
+}
+
+.panel-heading.header-color-green {
+	background-color: #007B40;
+	color: white;
 }

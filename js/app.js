@@ -13,7 +13,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$scope.provider = '';
 	$scope.authData;
 	$scope.userBoard;
-	$scope.nav  = { tabIndex : 0 };
+	$scope.nav  = { tabIndex : 1 };
 	$scope.user = {};
 
 	Auth.$onAuth(function(authData){

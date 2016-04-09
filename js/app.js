@@ -15,6 +15,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$scope.userBoard;
 	$scope.nav  = { tabIndex : 1 };
 	$scope.user = {};
+	var debug = false;
 
 	$scope.cityOptions = options = {
 		types: '(cities)',
@@ -30,7 +31,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 			getUserBoardData();
 			//$location.path("/authenticated");
 		}
-		console.log($scope.authData);
+		if(debug) console.log($scope.authData);
 	});
 
 	$scope.login = function(provider) {
@@ -56,7 +57,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 				$scope.user = $firebaseObject(userRef.child($scope.authData.uid));
 			}
 			else {
-				console.log("User already exists");
+				if(debug) console.log("User already exists");
 				$scope.user = $firebaseObject(userRef.child($scope.authData.uid));
 			}
 		});
@@ -87,9 +88,9 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	// $scope.getDefaultBoard = function() {
 	// 	if($scope.authData) {
 	// 		defaultBoardRef.on("value", function(snapshot){
-	// 			console.log(snapshot.val());
+	// 			if(debug) console.log(snapshot.val());
 	// 		}, function(errorObject) {
-	// 			console.log("The read failed for default board");
+	// 			if(debug) console.log("The read failed for default board");
 	// 		})
 	// 	}
 	// }
@@ -97,7 +98,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$scope.creteBoardForUser = function() {
 		boardsRef.child($scope.authData.uid).on("value", function(snapshot){
 			if(snapshot.val() !== null) {
-				console.log("board exists for user");
+				if(debug) console.log("board exists for user");
 			} else {
 				defaultBoardRef.on("value", function(snapshot){
 					var data = snapshot.val();
@@ -105,11 +106,11 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 						data
 					});
 				}, function(errorObject) {
-					console.log("failed to read default board");
+					if(debug) console.log("failed to read default board");
 				})
 			}
 		}, function(errorObject) {
-			console.log("failed to read board for user");
+			if(debug) console.log("failed to read board for user");
 		});
 	}
 
@@ -176,7 +177,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 				}
 			}
 		}
-		console.log($scope.missingTickets);
+		if(debug) console.log($scope.missingTickets);
 	}
 
 	$scope.usersWithExtraTickets = {results: []};
@@ -199,7 +200,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 										for(t in prize.tickets)
 										{
 											var ticket = prize.tickets[t];
-											// console.log(ticket.code , ticketCode);
+											// if(debug) console.log(ticket.code , ticketCode);
 
 											if(ticket.code === ticketCode && ticket.extra > 0 ) {
 												$scope.usersWithExtraTickets.results.push({ticket: ticketCode, user: $firebaseObject(userRef.child(cityUser.user))});
@@ -207,7 +208,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 										}
 									}
 								}
-								console.log($scope.usersWithExtraTickets.results);
+								if(debug) console.log($scope.usersWithExtraTickets.results);
 							}
 						)
 					}, $scope);

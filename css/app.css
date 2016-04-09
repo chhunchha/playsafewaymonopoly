@@ -205,7 +205,7 @@ tr:hover {
 }
 
 .panel-heading.header-color-orange {
-	background-color: #BD3E19;
+	background-color: rgba(255, 96, 0, 1);;
 	color: white;
 }
 

@@ -281,6 +281,42 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	}
 
 	$scope.searchText = "";
+
+
+	var infoTemplate = "<h3>Lets play together and beat the system!!</h3>\
+	<p>\
+		I am also trying to win something from this Safeway monopoly game. Haven't won anything yet.\
+		Many people must be getting same tickets again and again like me, and somebody might not be getting that ticket at all.\
+		May be somebody need what I have and somebody might have one extra which I need. So below is the idea.\
+	</p>\
+	<h3>How this should work</h3>\
+	<ul>\
+		<li>\
+			Manage your board by marking tickets which you have.\
+		</li>\
+		<li>\
+			Use + and - icon to keep count of repeating ticket. ( I hope you have kept those repeating tickets.)\
+		</li>\
+		<li>\
+			Will search for people who has extra tickets which you don't have in your city.\
+		</li>\
+		<li>\
+			Contact them and make arrangement for getting ticket. What will be the arrangement? - that is upto you.\
+		</li>\
+		<li>\
+			<strong>By Log in to this website you are aggreeing to share your information to others. Your Name, Email Id, City, Board  and ticket details etc will and may be available to other users.</strong>\
+			That is what we are here for. To share and collabrate. isn't it?\
+		</li>\
+		<li>\
+			<strong>Copyright © 2016 Sumant Chhunchha. All rights reserved.</strong>\
+		</li>\
+		<li>\
+			For Help and issues please email me at <strong><a href=\"mailto:playsafewaymonopolytogether@gmail.com?Subject=\" target=\"_top\">playsafewaymonopolytogether@gmail.com</a></strong>\
+		</li>\
+	</ul>";
+
+	$("#help-model-body").append(infoTemplate);
+	$("#info-help-body").append(infoTemplate);
 };
 
 var app = angular.module("playsafewaymonopoly", ["firebase","ngRoute","customFilter","angular-toArrayFilter"]);

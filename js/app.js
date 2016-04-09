@@ -114,7 +114,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 
 	$scope.states;
 	var getStates = function() {
-		$http.get("//www.geonames.org/childrenJSON?geonameId=6252001&style=short")
+		$http.get("www.geonames.org/childrenJSON?geonameId=6252001&style=short")
 		.then(function(response) {
 			$scope.states = response.data.geonames;
 			console.log($scope.states);
@@ -127,7 +127,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$scope.getCounties = function(stateName, geonameId) {
 		$scope.state = {name: stateName, geonameId: geonameId};
 		$scope.county = {name: "Select County"};
-		$http.get("//www.geonames.org/childrenJSON?geonameId=" + geonameId + "&style=short")
+		$http.get("www.geonames.org/childrenJSON?geonameId=" + geonameId + "&style=short")
 		.then(function(response) {
 			$scope.counties = response.data.geonames;
 		}, function(error) {
@@ -139,7 +139,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$scope.getCities = function(countyName, geonameId) {
 		$scope.county = {name: countyName, geonameId: geonameId};
 		$scope.city = {name: "Select City"};
-		$http.get("//www.geonames.org/childrenJSON?geonameId=" + geonameId + "&style=short")
+		$http.get("www.geonames.org/childrenJSON?geonameId=" + geonameId + "&style=short")
 		.then(function(response) {
 			$scope.cities = response.data.geonames;
 		}, function(error) {

@@ -90,7 +90,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	// }
 
 	$scope.creteBoardForUser = function() {
-		boardsRef.on("value", function(snapshot){
+		boardsRef.child($scope.authData.uid).on("value", function(snapshot){
 			if(snapshot.val() !== null) {
 				console.log("board exists for user");
 			} else {
@@ -159,21 +159,23 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	}
 
 	var removeUserFromOldCity = function(userWithOldCity) {
-		var oldCity = userWithOldCity.city.geonameId;
-		var thiCityUsersRef = new Firebase(appURL + "/city_users/" + oldCity);
-		var oldCityUsers = $firebaseArray(thiCityUsersRef);
+		if(userWithOldCity.city != undefined) {
+			var oldCity = userWithOldCity.city.geonameId;
+			var thiCityUsersRef = new Firebase(appURL + "/city_users/" + oldCity);
+			var oldCityUsers = $firebaseArray(thiCityUsersRef);
 
-		oldCityUsers.$loaded(
-			function(x) {
-				for(i in oldCityUsers) {
-					if(oldCityUsers[i].user === $scope.authData.uid) {
-						oldCityUsers.$remove(oldCityUsers[i]);
+			oldCityUsers.$loaded(
+				function(x) {
+					for(i in oldCityUsers) {
+						if(oldCityUsers[i].user === $scope.authData.uid) {
+							oldCityUsers.$remove(oldCityUsers[i]);
+						}
 					}
-				}
-  			}, function(error) {
-    			console.error("Error in removing user from old city list:", error);
-  			}
-		);
+	  			}, function(error) {
+	    			console.error("Error in removing user from old city list:", error);
+	  			}
+			);
+		}
 	}
 
 	$scope.saveProfile = function() {
@@ -235,6 +237,8 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 										for(t in prize.tickets)
 										{
 											var ticket = prize.tickets[t];
+											// console.log(ticket.code , ticketCode);
+
 											if(ticket.code === ticketCode && ticket.extra > 0 ) {
 												$scope.usersWithExtraTickets.results.push({ticket: ticketCode, user: $firebaseObject(userRef.child(cityUser.user))});
 											}

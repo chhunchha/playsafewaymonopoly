@@ -222,3 +222,7 @@ tr:hover {
 	background-color: #007B40;
 	color: white;
 }
+
+.find-form-group {
+	min-height: 95px;
+}

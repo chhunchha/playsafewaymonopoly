@@ -24,12 +24,13 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js"></script>
-
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 
 	<!-- AngularFire -->
 	<script src="https://cdn.firebase.com/libs/angularfire/1.1.1/angularfire.min.js"></script>
 
-
+	<script src="js/ngAutocomplete.js"></script>
 	<script src="js/app.js"></script>
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
@@ -190,26 +191,13 @@
 					<div class="panel-body">
 						<ul class="list-group">
 							<div class="form-group">
-								<label for="state">State:</label>
-								<input disabled class="form-control" ng-model="user.state.name"/>
+								<label for="state">City:</label>
+								<input disabled class="form-control" ng-model="user.city"/>
 								<!-- <li class="list-group-item list-group-item-info">{{user.state.name}}</li> -->
 							</div>
-							<div class="form-group">
-								<label for="state">County:</label>
-								<input disabled class="form-control" ng-model="user.county.name"/>
-
-								<!-- <li class="list-group-item list-group-item-info">{{user.county.name}}</li> -->
-							</div>
-							<div class="form-group">
-								<label for="state">City:</label>
-								<input disabled class="form-control" ng-model="user.city.name"/>
-
-								<!-- <li class="list-group-item list-group-item-info">{{user.city.name}}</li> -->
-							</div>
-
-							<div>
+							<!-- <div>
 								 We are workig on fixing some issues in this section. Please visit after some time.
-							</div>
+							</div> -->
 						</ul>
 					</div>
 				</div>
@@ -219,54 +207,13 @@
 					<div class="panel-body">
 						<form name="profile-frm">
 							<div class="form-group">
-								<label for="state">State:</label>
-								<div class="dropdown">
-									<button class="btn btn-default dropdown-toggle" type="button" id="stateDropdown"
-									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									{{state.name}}
-									<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu" aria-labelledby="stateDropdown">
-										<li ng-repeat="state in states" ng-click="getCounties(state.name, state.geonameId)">
-											<a href="#">{{state.name}}</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="county">County:</label>
-								<div class="dropdown">
-									<button class="btn btn-default dropdown-toggle" type="button" id="countyDropdown"
-									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									{{county.name}}
-										<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu" aria-labelledby="countyDropdown">
-										<li ng-repeat="county in counties" ng-click="getCities(county.name, county.geonameId)">
-											<a href="#">{{county.name}}</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-							<div class="form-group">
 								<label for="city">City:</label>
-								<div class="dropdown">
-									<button class="btn btn-default dropdown-toggle" type="button" id="cityDropdown"
-									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									{{city.name}}
-									<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu" aria-labelledby="cityDropdown">
-										<li ng-repeat="city in cities" ng-click="selectCity(city.name, city.geonameId)">
-											<a href="#">{{city.name}}</a>
-										</li>
-									</ul>
-								</div>
+								<input type="text"  ng-autocomplete ng-model="city" options="cityOptions" details="details" class="form-control"/>
 							</div>
 							<button type="submit" class="btn btn-primary" ng-click="saveProfile(); nav.tabIndex=1;">Submit</button>
-							<div>
+							<!-- <div>
 								 We are workig on fixing some issues in this section. Please visit after some time.
-							</div>
+							</div> -->
 						</form>
 					</div>
 				</div>
@@ -285,54 +232,44 @@
 						</strong></h4>
 					</div>
 					<div class="panel-body">
-						<div class="form-group col-md-2 col-xs-12 col-lg-2">
-							<label for="city">City:</label>
-							<div class="dropdown">
-								<button class="btn btn-default dropdown-toggle" type="button" id="cityDropdown"
-								data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								{{searchInCity.name}}
-								<span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu" aria-labelledby="cityDropdown">
-									<li ng-repeat="city in cities" ng-click="selectSearchInCity(city.name, city.geonameId)">
-										<a href="#">{{city.name}}</a>
-									</li>
-								</ul>
+						<div class="row">
+
+							<div class="form-group col-md-6 col-xs-12 col-lg-6">
+								<fieldset class="form-group">
+									<label for="city">City:</label>
+									<input type="text"  ng-autocomplete ng-model="city" options="cityOptions" details="details" class="form-control" placeholder="{{user.city}}"/>
+								</fieldset>
+								<button class="btn btn-primary" st ng-click="selectSearchInCity(city)"> Seach </button>
+							</div>
+							<div class="form-group col-md-6 col-xs-12 col-lg-6">
+								<label for="resultFilter">Filter: </label>
+								<input type="text" class="form-control" ng-model="searchText" id="resultFilter" placeholder="Search"/>
 							</div>
 						</div>
-						<div class="form-group col-md-2 col-xs-12 col-lg-2">
-							<label for="resultFilter">Filter: </label>
-							<input type="text" class="form-control" ng-model="searchText" id="resultFilter" placeholder="Search"/>
-						</div>
-						<div class="form-group col-md-4 col-xs-12 col-lg-4">
-							<div style="padding-top: 22PX;">Found <strong> {{usersWithExtraTickets.results.length}} </strong> users in <strong> {{searchInCity.name}}</strong> for your <strong>{{missingTickets.length}}</strong> missing tickets.</div>
-							<!-- <div class="noOfResults">
-								<label>{{usersWithExtraTickets.results.length}} </label>
-							</div> -->
-						</div>
-						<div style="padding-top: 22px;" class="form-group col-md-4 col-xs-12 col-lg-4" ng-show="usersWithExtraTickets.results.length == 0">
-							Looks like not enough people. Spread the word and ask friends to join.
-						</div>
-						<div style="padding-top: 30px;" class="col-md-4 col-xs-12 col-lg-4" >
-							<!-- AddToAny BEGIN -->
-							<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
-								<a style="line-height: 30px; padding-right: 5px;">Share</a>
-								<a class="a2a_button_facebook"></a>
-								<a class="a2a_button_twitter"></a>
-								<a class="a2a_button_google_plus"></a>
-								<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+						<div class="row">
+
+							<div class="form-group col-md-4 col-xs-12 col-lg-4">
+								<div style="padding-top: 22PX;">Found <strong> {{usersWithExtraTickets.results.length}} </strong> users in <strong> {{searchInCity}}</strong> for your <strong>{{missingTickets.length}}</strong> missing tickets.</div>
+								<!-- <div class="noOfResults">
+									<label>{{usersWithExtraTickets.results.length}} </label>
+								</div> -->
 							</div>
-							<script async src="https://static.addtoany.com/menu/page.js"></script>
-							<!-- AddToAny END -->
+							<div style="padding-top: 22px;" class="form-group col-md-4 col-xs-12 col-lg-4" ng-if="usersWithExtraTickets.results.length == 0">
+								Looks like not enough people. Spread the word and ask friends to join.
+							</div>
+							<div style="padding-top: 30px;" class="col-md-4 col-xs-12 col-lg-4" >
+								<!-- AddToAny BEGIN -->
+								<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+									<a style="line-height: 30px; padding-right: 5px;">Share</a>
+									<a class="a2a_button_facebook"></a>
+									<a class="a2a_button_twitter"></a>
+									<a class="a2a_button_google_plus"></a>
+									<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+								</div>
+								<script async src="https://static.addtoany.com/menu/page.js"></script>
+								<!-- AddToAny END -->
+							</div>
 						</div>
-						<!-- <div class="form-group col-md-4 col-xs-12 col-lg-4">
-							<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-								<input type="hidden" name="cmd" value="_s-xclick">
-								<input type="hidden" name="hosted_button_id" value="27AG69EHZY9HW">
-								<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-								<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-							</form>
-						</div> -->
 					</div>
 					<div class="table-responsive results">
 						<table class="table">

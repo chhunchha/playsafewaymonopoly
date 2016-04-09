@@ -16,6 +16,11 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$scope.nav  = { tabIndex : 1 };
 	$scope.user = {};
 
+	$scope.cityOptions = options = {
+		types: '(cities)',
+		country: 'us'
+	}
+
 	Auth.$onAuth(function(authData){
 		$scope.authData = authData;
 		if(authData) {
@@ -112,55 +117,15 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 		$scope.userBoard = $firebaseObject(boardsRef.child($scope.authData.uid));
 	}
 
-	$scope.states;
-	var getStates = function() {
-		$http.get("//www.geonames.org/childrenJSON?geonameId=6252001&style=short")
-		.then(function(response) {
-			$scope.states = response.data.geonames;
-			console.log($scope.states);
-		}, function(error) {
-			console.log(error);
-		});
-	}
-
-	$scope.conties;
-	$scope.getCounties = function(stateName, geonameId) {
-		$scope.state = {name: stateName, geonameId: geonameId};
-		$scope.county = {name: "Select County"};
-		$http.get("//www.geonames.org/childrenJSON?geonameId=" + geonameId + "&style=short")
-		.then(function(response) {
-			$scope.counties = response.data.geonames;
-		}, function(error) {
-			console.log(error);
-		});
-	}
-
-	$scope.cities;
-	$scope.getCities = function(countyName, geonameId) {
-		$scope.county = {name: countyName, geonameId: geonameId};
-		$scope.city = {name: "Select City"};
-		$http.get("//www.geonames.org/childrenJSON?geonameId=" + geonameId + "&style=short")
-		.then(function(response) {
-			$scope.cities = response.data.geonames;
-		}, function(error) {
-			console.log(error);
-		});
-	}
-
-	$scope.selectCity = function(cityName, geonameId) {
-		$scope.city = {name: cityName, geonameId: geonameId};
-	}
-
-
 	var addUserToCity = function(user) {
-		var thiCityUsers = new Firebase(appURL + "/city_users/" + user.city.geonameId);
+		var thiCityUsers = new Firebase(appURL + "/city_users/" + user.city);
 		var thisCityUserRef = thiCityUsers.push();
 		thisCityUserRef.set({user: $scope.authData.uid});
 	}
 
 	var removeUserFromOldCity = function(userWithOldCity) {
 		if(userWithOldCity.city != undefined) {
-			var oldCity = userWithOldCity.city.geonameId;
+			var oldCity = userWithOldCity.city;
 			var thiCityUsersRef = new Firebase(appURL + "/city_users/" + oldCity);
 			var oldCityUsers = $firebaseArray(thiCityUsersRef);
 
@@ -181,19 +146,16 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$scope.saveProfile = function() {
 
 		removeUserFromOldCity($scope.user);
-
-		$scope.user.state = $scope.state;
-		$scope.user.county = $scope.county;
 		$scope.user.city = $scope.city;
 		$scope.user.$save();
 
 		addUserToCity($scope.user);
 	}
 
-	$scope.state = {name: "Select State"};
-	$scope.county = {name: "Select County"};
-	$scope.city = {name: "Select City"};
-	getStates();
+	// $scope.state = {name: "Select State"};
+	// $scope.county = {name: "Select County"};
+	// $scope.city = {name: "Select City"};
+	// getStates();
 
 	// get my tickets with status false
 	// look for users in my city
@@ -210,7 +172,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 				var ticket = prize.tickets[t];
 				if(ticket.status == false) {
 					$scope.missingTickets.push(ticket);
-					getUsersInTheCityWithThisExtraTicket($scope.user.city.geonameId, ticket.code)
+					getUsersInTheCityWithThisExtraTicket($scope.user.city, ticket.code)
 				}
 			}
 		}
@@ -218,8 +180,8 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	}
 
 	$scope.usersWithExtraTickets = {results: []};
-	var getUsersInTheCityWithThisExtraTicket = function(cityGeoNameId, ticketCode) {
-		var thisCityUsersRef = new Firebase(appURL + "/city_users/" + cityGeoNameId);
+	var getUsersInTheCityWithThisExtraTicket = function(city, ticketCode) {
+		var thisCityUsersRef = new Firebase(appURL + "/city_users/" + city);
 		var cityUsers = $firebaseArray(thisCityUsersRef);
 
 		cityUsers.$loaded(
@@ -259,7 +221,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	var getUsersInTheCityWithExtraTickets = function() {
 		$scope.usersWithExtraTickets = {results: []};
 		angular.forEach($scope.missingTickets, function(ticket){
-			getUsersInTheCityWithThisExtraTicket($scope.searchInCity.geonameId, ticket.code)
+			getUsersInTheCityWithThisExtraTicket($scope.searchInCity, ticket.code)
 		})
 	}
 
@@ -268,14 +230,14 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 		$scope.selectedTicketCode = key;
 	}
 
-	$scope.selectSearchInCity = function(name, geonameId) {
-		$scope.searchInCity = {name: name, geonameId: geonameId};
+	$scope.selectSearchInCity = function(city) {
+		$scope.searchInCity = city;
 		getUsersInTheCityWithExtraTickets();
 	}
 
 	$scope.searchForMissingTickets = function() {
 		$scope.searchInCity = $scope.user.city;
-		$scope.getCities($scope.user.county.name, $scope.user.county.geonameId);
+		//$scope.getCities($scope.user.county.name, $scope.user.county.geonameId);
 		$scope.usersWithExtraTickets = {results: []};
 		getMyMissingTickets();
 	}
@@ -319,7 +281,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$("#info-help-body").append(infoTemplate);
 };
 
-var app = angular.module("playsafewaymonopoly", ["firebase","ngRoute","customFilter","angular-toArrayFilter"]);
+var app = angular.module("playsafewaymonopoly", ["firebase","ngRoute","customFilter","angular-toArrayFilter","ngAutocomplete"]);
 
 app.config(['$routeProvider', '$locationProvider',function($routeProvider, $locationProvider){
 	$routeProvider

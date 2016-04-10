@@ -214,7 +214,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 
 	$scope.selectSearchInCity = function(city) {
 		if(city == undefined || city == "" || city == null)
-			city = user.city;
+			city = $scope.user.city;
 
 		$scope.searchInCity = city;
 		getUsersInTheCityWithExtraTickets();

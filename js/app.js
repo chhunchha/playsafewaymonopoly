@@ -237,7 +237,10 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 		May be somebody need what I have and somebody might have one extra which I need. So below is the idea.\
 	</p>\
 	<h3>How this should work</h3>\
-	<ul>\
+	<div class='ticket-gif'>\
+		<img src='/images/ticket2.gif'></img>\
+	</div>\
+	<ul class='how-works'>\
 		<li>\
 			Manage your board by marking tickets which you have.\
 		</li>\
@@ -258,7 +261,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 			<strong>Copyright © 2016 Sumant Chhunchha. All rights reserved.</strong>\
 		</li>\
 		<li>\
-			For Help and issues please email me at <strong><a href=\"mailto:playsafewaymonopolytogether@gmail.com?Subject=\" target=\"_top\">playsafewaymonopolytogether@gmail.com</a></strong>\
+			For Help and issues please email at <strong><a href=\"mailto:playsafewaymonopolytogether@gmail.com?Subject=\" target=\"_top\">playsafewaymonopolytogether@gmail.com</a></strong>\
 		</li>\
 	</ul>";
 

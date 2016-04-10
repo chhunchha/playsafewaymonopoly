@@ -85,16 +85,6 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 		}
 	}
 
-	// $scope.getDefaultBoard = function() {
-	// 	if($scope.authData) {
-	// 		defaultBoardRef.on("value", function(snapshot){
-	// 			if(debug) console.log(snapshot.val());
-	// 		}, function(errorObject) {
-	// 			if(debug) console.log("The read failed for default board");
-	// 		})
-	// 	}
-	// }
-
 	$scope.creteBoardForUser = function() {
 		boardsRef.child($scope.authData.uid).on("value", function(snapshot){
 			if(snapshot.val() !== null) {
@@ -152,15 +142,6 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 
 		addUserToCity($scope.user);
 	}
-
-	// $scope.state = {name: "Select State"};
-	// $scope.county = {name: "Select County"};
-	// $scope.city = {name: "Select City"};
-	// getStates();
-
-	// get my tickets with status false
-	// look for users in my city
-	// look for tickets with extra > 0 in users found above
 
 	$scope.missingTickets = [];
 	var getMyMissingTickets = function() {
@@ -234,7 +215,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$scope.selectSearchInCity = function(city) {
 		if(city == undefined || city == "" || city == null)
 			city = user.city;
-			
+
 		$scope.searchInCity = city;
 		getUsersInTheCityWithExtraTickets();
 	}

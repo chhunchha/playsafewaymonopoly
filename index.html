@@ -141,6 +141,14 @@
 				</a>
 				<span class="username">{{cachedProfile.name}} - {{cachedProfile.email}}</span>
 			</div>
+			<div class="row">
+				<div class="col-md-12 col-lg-12 col-xs-12">
+					<div class="alert alert-danger" role="alert" ng-if="user.city == undefiend">
+						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						<span>Set your profile city</span>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class="row searchRow">
 			<div class=" col-md-6 col-lg-6 col-xs-12">
@@ -210,7 +218,7 @@
 								<label for="city">City:</label>
 								<input type="text"  ng-autocomplete ng-model="city" options="cityOptions" details="details" class="form-control"/>
 							</div>
-							<button type="submit" class="btn btn-primary" ng-click="saveProfile(); nav.tabIndex=1;">Submit</button>
+							<button type="submit" class="btn btn-primary" ng-click="saveProfile(); nav.tabIndex=1;">Set as My City</button>
 							<!-- <div>
 								 We are workig on fixing some issues in this section. Please visit after some time.
 							</div> -->
@@ -224,7 +232,8 @@
 		<div class="row">
 			<div class="col-md-12 col-lg-12 col-xs-12">
 				<div class="alert alert-danger" role="alert" ng-if="user.city == undefiend">
-					<strong>Set your profile city</strong></div>
+					<strong>Set your profile city</strong>
+				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h4><strong>

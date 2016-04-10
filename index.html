@@ -297,7 +297,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="result in usersWithExtraTickets.results | filter:{$: searchText} | orderBy: result.ticket">
+								<tr ng-repeat="result in usersWithExtraTickets.results | filter:{$: searchText} | orderBy: 'ticket'">
 									<td>
 										{{$index + 1}}
 									</td>

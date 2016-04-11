@@ -145,7 +145,7 @@
 				<div class="col-md-12 col-lg-12 col-xs-12">
 					<div class="alert alert-danger" role="alert" ng-if="user.city == undefiend">
 						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-						<span>Set your profile city</span>
+						<span>People are not able to find you, Set your profile city.</span>
 					</div>
 				</div>
 			</div>
@@ -232,7 +232,9 @@
 		<div class="row">
 			<div class="col-md-12 col-lg-12 col-xs-12">
 				<div class="alert alert-danger" role="alert" ng-if="user.city == undefiend">
-					<strong>Set your profile city</strong>
+					<strong>
+						Please set your profile city for search to work.
+					</strong>
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -248,7 +250,9 @@
 									<label for="city">City:</label>
 									<input type="text"  ng-autocomplete ng-model="city" options="cityOptions" details="details" class="form-control" placeholder="{{user.city}}"/>
 								</fieldset>
-								<button class="btn btn-primary" st ng-click="selectSearchInCity(city)"> Seach </button>
+								<button class="btn btn-primary" ng-click="selectSearchInCity(city)" ng-disabled="user.city == undefined"> Search </button>
+								<!-- <button class="btn btn-primary" st ng-click="searchInAllUsers()"> Search All User</button>
+								<button class="btn btn-primary" st ng-click="whatPrizesCanBeWon()"> Prizes</button> -->
 							</div>
 							<div class="form-group col-md-6 col-xs-12 col-lg-6">
 								<label for="resultFilter">Filter: </label>
@@ -280,11 +284,37 @@
 							</div>
 						</div>
 					</div>
+					<div class="table-responsive results" ng-show="prizesCouldBeWon.length !=0">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>
+										Prize
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="prize in prizesCouldBeWon | orderBy: 'name'">
+									<td>
+										{{$index + 1}}
+									</td>
+									<td>
+										{{prize.name}}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<hr />
+					</div>
 					<div class="table-responsive results">
 						<table class="table">
 							<thead>
 								<tr>
 									<th>#</th>
+									<th>
+										Prize
+									</th>
 									<th>
 										Ticket
 									</th>
@@ -297,12 +327,15 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="result in usersWithExtraTickets.results | filter:{$: searchText} | orderBy: 'ticket'">
+								<tr ng-repeat="result in usersWithExtraTickets.results | filter:{$: searchText} | orderBy: 'ticket.code'">
 									<td>
 										{{$index + 1}}
 									</td>
 									<td>
-										{{result.ticket}}
+										{{result.prize.name}}
+									</td>
+									<td>
+										{{result.ticket.code}}
 									</td>
 									<td>
 										{{result.user.name}}

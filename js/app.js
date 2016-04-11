@@ -122,7 +122,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 
 			oldCityUsers.$loaded(
 				function(x) {
-					for(i in oldCityUsers) {
+					for(var i in oldCityUsers) {
 						if(oldCityUsers[i].user === $scope.authData.uid) {
 							oldCityUsers.$remove(oldCityUsers[i]);
 						}
@@ -146,10 +146,10 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$scope.missingTickets = [];
 	var getMyMissingTickets = function() {
 		$scope.missingTickets = [];
-		for(i in $scope.userBoard.data)
+		for(var i in $scope.userBoard.data)
 		{
 			var prize = $scope.userBoard.data[i];
-			for(t in prize.tickets)
+			for(var t in prize.tickets)
 			{
 				var ticket = prize.tickets[t];
 				if(ticket.status == false) {
@@ -175,16 +175,16 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 						cityUserBoard.$loaded(
 							function(x){
 								if(cityUser.user !== $scope.user.$id) {
-									for(k in cityUserBoard.data)
+									for(var k in cityUserBoard.data)
 									{
 										var prize = cityUserBoard.data[k];
-										for(t in prize.tickets)
+										for(var t in prize.tickets)
 										{
 											var ticket = prize.tickets[t];
 											// if(debug) console.log(ticket.code , ticketCode);
 
 											if(ticket.code === ticketCode && ticket.extra > 0 ) {
-												$scope.usersWithExtraTickets.results.push({ticket: ticketCode, user: $firebaseObject(userRef.child(cityUser.user))});
+												$scope.usersWithExtraTickets.results.push({prize: prize, ticket: ticket, user: $firebaseObject(userRef.child(cityUser.user))});
 											}
 										}
 									}
@@ -203,13 +203,56 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	var getUsersInTheCityWithExtraTickets = function() {
 		$scope.usersWithExtraTickets = {results: []};
 		angular.forEach($scope.missingTickets, function(ticket){
-			getUsersInTheCityWithThisExtraTicket($scope.searchInCity, ticket.code)
-		})
+			getUsersInTheCityWithThisExtraTicket($scope.searchInCity, ticket.code);
+		});
+	}
+
+	var getUsersWithThisExtraTicket = function(ticketCode) {
+		var boardsRef = new Firebase(appURL + "/boards/");
+		var boards = $firebaseArray(boardsRef);
+
+		boards.$loaded(
+			function(x) {
+				if(boards.length != 0)
+				{
+					angular.forEach( boards, function(userBoard){
+						if(userBoard.$id !== $scope.user.$id) {
+							for(var k in userBoard.data)
+							{
+								var prize = userBoard.data[k];
+								for(var t in prize.tickets)
+								{
+									var ticket = prize.tickets[t];
+									// if(debug) console.log(ticket.code , ticketCode);
+
+									if(ticket.code === ticketCode && (ticket.extra > 0 || ticket.status == false)) {
+										$scope.usersWithExtraTickets.results.push({prize: prize, ticket: ticket, user: $firebaseObject(userRef.child(userBoard.$id))});
+									}
+								}
+							}
+						}
+					}, $scope);
+				}
+			}, function(error) {
+				console.error("Error in getUsersWithThisExtraTicket", error);
+			}
+		);
+	}
+
+	var getUsersWithExtraTickets = function() {
+		$scope.usersWithExtraTickets = {results: []};
+		angular.forEach($scope.missingTickets, function(ticket){
+			getUsersWithThisExtraTicket(ticket.code);
+		});
 	}
 
 	$scope.selectedTicketCode = "Select Ticket";
 	$scope.selectTicketCode = function(key) {
 		$scope.selectedTicketCode = key;
+	}
+
+	$scope.searchInAllUsers = function() {
+		getUsersWithExtraTickets();
 	}
 
 	$scope.selectSearchInCity = function(city) {
@@ -227,8 +270,47 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 		getMyMissingTickets();
 	}
 
-	$scope.searchText = "";
+	$scope.prizesCouldBeWon = [];
 
+	$scope.whatPrizesCanBeWon = function() {
+		$scope.prizesCouldBeWon = [];
+
+		for(var j in $scope.userBoard.data)
+		{
+			var missingTicketsForThisPrize = [];
+			var prize = $scope.userBoard.data[j];
+			for(var t in prize.tickets)
+			{
+				var ticket = prize.tickets[t];
+				var canWinPrize = false;
+				if(ticket.status == false) {
+					missingTicketsForThisPrize.push(ticket);
+				}
+			}
+
+			var foundAllMissing = true;
+			for(var k in missingTicketsForThisPrize) {
+				var foundMissing = false;
+				for(var m in $scope.usersWithExtraTickets.results) {
+					if(missingTicketsForThisPrize[k].code === $scope.usersWithExtraTickets.results[m].ticket) {
+						foundMissing = true;
+						break;
+					}
+				}
+				if(foundMissing == false) {
+					foundAllMissing = false;
+					break;
+				}
+			}
+
+			if(foundAllMissing) {
+				$scope.prizesCouldBeWon.push(prize);
+			}
+			console.log($scope.prizesCouldBeWon);
+		}
+	}
+
+	$scope.searchText = "";
 
 	var infoTemplate = "<h3>Lets play together and beat the system!!</h3>\
 	<p>\

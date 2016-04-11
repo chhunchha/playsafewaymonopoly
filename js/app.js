@@ -207,52 +207,9 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 		});
 	}
 
-	var getUsersWithThisExtraTicket = function(ticketCode) {
-		var boardsRef = new Firebase(appURL + "/boards/");
-		var boards = $firebaseArray(boardsRef);
-
-		boards.$loaded(
-			function(x) {
-				if(boards.length != 0)
-				{
-					angular.forEach( boards, function(userBoard){
-						if(userBoard.$id !== $scope.user.$id) {
-							for(var k in userBoard.data)
-							{
-								var prize = userBoard.data[k];
-								for(var t in prize.tickets)
-								{
-									var ticket = prize.tickets[t];
-									// if(debug) console.log(ticket.code , ticketCode);
-
-									if(ticket.code === ticketCode && (ticket.extra > 0 || ticket.status == false)) {
-										$scope.usersWithExtraTickets.results.push({prize: prize, ticket: ticket, user: $firebaseObject(userRef.child(userBoard.$id))});
-									}
-								}
-							}
-						}
-					}, $scope);
-				}
-			}, function(error) {
-				console.error("Error in getUsersWithThisExtraTicket", error);
-			}
-		);
-	}
-
-	var getUsersWithExtraTickets = function() {
-		$scope.usersWithExtraTickets = {results: []};
-		angular.forEach($scope.missingTickets, function(ticket){
-			getUsersWithThisExtraTicket(ticket.code);
-		});
-	}
-
 	$scope.selectedTicketCode = "Select Ticket";
 	$scope.selectTicketCode = function(key) {
 		$scope.selectedTicketCode = key;
-	}
-
-	$scope.searchInAllUsers = function() {
-		getUsersWithExtraTickets();
 	}
 
 	$scope.selectSearchInCity = function(city) {

@@ -152,7 +152,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 			for(var t in prize.tickets)
 			{
 				var ticket = prize.tickets[t];
-				if(ticket.status == false) {
+				if(ticket.status == false && ticket.extra == 0) {
 					$scope.missingTickets.push(ticket);
 					getUsersInTheCityWithThisExtraTicket($scope.user.city, ticket.code)
 				}

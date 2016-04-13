@@ -333,7 +333,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 			Use + and - icon to keep count of repeating ticket. ( I hope you have kept those repeating tickets.)\
 		</li>\
 		<li>\
-			Will search for people who has extra tickets which you don't have in your city.\
+			Will search for people who has  tickets which you don't have.\
 		</li>\
 		<li>\
 			Contact them and make arrangement for getting ticket. What will be the arrangement? - that is upto you.\

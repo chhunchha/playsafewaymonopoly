@@ -254,6 +254,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$scope.searchInAllUsers = function() {
 		$scope.searchText = "";
 		$scope.usersWithExtraTickets = {results: []};
+		$scope.prizesCouldBeWon = [];
 		getMyMissingTickets();
 		getUsersWithExtraTickets();
 	}

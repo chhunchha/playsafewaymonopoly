@@ -67,7 +67,7 @@
 				<ul class="nav navbar-nav" ng-if="authData">
 					<li ng-click="nav.tabIndex = 1" ng-class="{'active' : nav.tabIndex == 1}"><a href="#">My Board</a></li>
 					<li ng-click="nav.tabIndex = 2" ng-class="{'active' : nav.tabIndex == 2}"><a href="#">Profile</a></li>
-					<li ng-click="nav.tabIndex = 3; searchForMissingTickets();" ng-class="{'active' : nav.tabIndex == 3}"><a href="#">Find tickets</a></li>
+					<li ng-click="nav.tabIndex = 3; searchInAllUsers();" ng-class="{'active' : nav.tabIndex == 3}"><a href="#">Find tickets</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<!-- <button type="button" class="btn btn-default navbar-btn" ng-click="login('google')"  ng-hide="authData">Sign in</button> -->
@@ -146,6 +146,15 @@
 					<div class="alert alert-danger" role="alert" ng-if="user.city == undefiend">
 						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 						<span>People are not able to find you, Set your profile city.</span>
+					</div>
+					<div class="alert alert-info" role="alert">
+						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						<span>
+							<strong>
+								Update: 'Find tickets' now looks at every user board. Search is no more restricted to city.
+								<br /> I hope, whoever wins, will be kind hearted and shares a part of prize with me for my efforts. Good Luck! :)
+							</strong>
+						</span>
 					</div>
 					<div class="alert alert-danger" role="alert">
 						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -243,35 +252,16 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h4><strong>
-							People with extra tickets you need!
+							Tickets you need.
 						</strong></h4>
 					</div>
 					<div class="panel-body">
 						<div class="row">
-
-							<div class="form-group col-md-6 col-xs-12 col-lg-6">
-								<fieldset class="form-group">
-									<label for="city">City:</label>
-									<input type="text"  ng-autocomplete ng-model="city" options="cityOptions" details="details" class="form-control" placeholder="{{user.city}}"/>
-								</fieldset>
-								<button class="btn btn-primary" ng-click="selectSearchInCity(city)" ng-disabled="user.city == undefined"> Search </button>
-								<span> Try 'Sunnyvale, CA, United States' (My city)</span>
-							</div>
-							<div class="form-group col-md-6 col-xs-12 col-lg-6">
-								<label for="resultFilter">Filter: </label>
-								<input type="text" class="form-control" ng-model="searchText" id="resultFilter" placeholder="Search"/>
-							</div>
-						</div>
-						<div class="row">
-
-							<div class="form-group col-md-4 col-xs-12 col-lg-4">
+							<div class="form-group col-md-8 col-xs-12 col-lg-8">
 								<div style="padding-top: 22PX;">Found <strong> {{usersWithExtraTickets.results.length}} </strong> tickets in <strong> {{searchInCity}}</strong> for your <strong>{{missingTickets.length}}</strong> missing tickets.</div>
 								<!-- <div class="noOfResults">
 									<label>{{usersWithExtraTickets.results.length}} </label>
 								</div> -->
-							</div>
-							<div style="padding-top: 22px;" class="form-group col-md-4 col-xs-12 col-lg-4" ng-if="usersWithExtraTickets.results.length == 0">
-								Looks like not enough people. Spread the word and ask friends to join.
 							</div>
 							<div style="padding-top: 30px;" class="col-md-4 col-xs-12 col-lg-4" >
 								<!-- AddToAny BEGIN -->
@@ -286,8 +276,18 @@
 								<!-- AddToAny END -->
 							</div>
 						</div>
+						<div class="row">
+							<div class="form-group col-md-12 col-xs-12 col-lg-12">
+								<button class="btn btn-primary" ng-click="searchInAllUsers()" ng-disabled="user.city == undefined"> Search </button>
+								<button class="btn btn-primary" ng-click="whatPrizesCanBeWon()" ng-disabled="user.city == undefined"> Can We Win? </button>
+							</div>
+							<div class="form-group col-md-6 col-xs-12 col-lg-6">
+								<label for="resultFilter">Filter: </label>
+								<input type="text" class="form-control" ng-model="searchText" id="resultFilter" placeholder="Search"/>
+							</div>
+						</div>
 					</div>
-					<div class="table-responsive results" ng-show="prizesCouldBeWon.length !=0">
+					<div class="table-responsive results">
 						<table class="table">
 							<thead>
 								<tr>
@@ -298,7 +298,15 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="prize in prizesCouldBeWon | orderBy: 'name'">
+								<tr  ng-show="prizesCouldBeWon.length ==0">
+									<td>
+
+									</td>
+									<td>
+										Hit 'Can We Win?' button after missing tickets are found to see what prizes could be won by combining tickets.
+									</td>
+								</tr>
+								<tr ng-repeat="prize in prizesCouldBeWon | orderBy: '-value'">
 									<td>
 										{{$index + 1}}
 									</td>

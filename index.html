@@ -1,4 +1,8 @@
-
+<!-- todo
+- put list of rare pieces
+- other user's board for my self
+- notification to me if anyone updates rare piece
+-->
 <html ng-app="playsafewaymonopoly">
 <head>
 	<meta charset="UTF-8">
@@ -187,7 +191,7 @@
 										{{ticket.code}}
 									</div>
 									<div class="status" ng-class="{'iHaveIt' : ticket.status}">
-										<div class="status-button cursor-pointer" ng-click="ticket.status = !ticket.status; userBoard.$save();">
+										<div class="status-button cursor-pointer" ng-click="updateTicketStatus(ticket);">
 											<span  class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 											<!-- <span ng-if="ticket.status" ng-click="ticket.status = !ticket.status" class="glyphicon glyphicon-remove" aria-hidden="true"></span> -->
 										</div>

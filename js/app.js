@@ -8,6 +8,7 @@ var boardsRef = new Firebase(appURL + "/boards");
 var defaultBoardRef = new Firebase(appURL + "/default_board")
 var cityUsers = new Firebase(appURL + "/city_users");
 
+var rare_tickets = "$618H,?625G,A502C,B506B,C513D,D515A,E524D,F528C,Z608B,Y603A,X602D,W597C,V592B,U590D,T585C,S579A,R575A,Q573C,P568B,O565C,N562D,M556B,L551A,K549C,G531A,H538D,I541C,J544B,$613C,?622D,A504E,B505A,C514E,D517C,E525E,F527B";
 PlayCntrl.$inject = ['$scope', 'Auth', '$location', '$firebaseObject', '$http', '$firebaseArray', '$q'];
 function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArray, $q){
 	$scope.provider = '';
@@ -132,6 +133,107 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	  			}
 			);
 		}
+	}
+
+	var sendEmail = function(ticket) {
+
+
+// curl -s --user 'api:key-126248d42ef9442a93b9704cc128e3d3' 'https://api.mailgun.net/v3/sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org/messages' -F from='postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org' -F to='mr.chhunchha@gmail.com' -F subject='Hello' -F text='Testing some Mailgun awesomness!'
+//
+// curl -s
+// --user 'api:key-126248d42ef9442a93b9704cc128e3d3'
+// 'https://api.mailgun.net/v3/sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org/messages'
+// -F from='postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org'
+// -F to='mr.chhunchha@gmail.com'
+// -F subject='Hello'
+// -F text='Testing some Mailgun awesomness!'
+
+// curl -s 'https://api:key-126248d42ef9442a93b9704cc128e3d3@api.mailgun.net/v3/sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org/messages' -F from='postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org' -F to='mr.chhunchha@gmail.com' -F subject='Hello' -F text='Testing some Mailgun awesomness!'
+
+
+		var method = 'POST';
+		var url = "https://api:key-126248d42ef9442a93b9704cc128e3d3@api.mailgun.net/v3/sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org/messages";
+		var mailJSON = {
+			to: "mr.chhunchha@gmail.com",
+			subject: "Alert: " + ticket.code + " found",
+			text: "Alert: " + ticket.code + " found",
+			from: "Play safeway monopoly <postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org>"
+		}
+		//
+		//
+		// $http({
+		//    method: method,
+		//    url: url +
+		// 	   "to=" + "mr.chhunchha@gmail.com" +
+		// 	   "&subject=" + "Alert: " + ticket.code + " found" +
+		// 	   "&text=" + "Alert: " + ticket.code + " found" +
+		// 	   "&from=" + "postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org"
+		// }).
+		$http.post(url, mailJSON).
+		success(function(data, status) {
+			console.log(data);
+			console.log(status);
+		}).
+		error(function(data, status) {
+			console.log(data);
+			console.log(status);
+		});
+	}
+
+	// var sendEmail = function(ticket) {
+	// 	var mailJSON ={
+	// 		"key": "8wLNsT_uBLlbeVlwwaeTyQ",
+	// 		"message": {
+	// 			"html": "Alert: " + ticket.code + " found",
+	// 			"text": "Alert: " + ticket.code + " found",
+	// 			"subject": "Alert: " + ticket.code + " found",
+	// 			"from_email": "playsafewaymonopolytogether@gmail.com",
+	// 			"from_name": "Play safeway monopoly together",
+	// 			"to": [
+	// 				{
+	// 					"email": "mr.chhunchha@gmail.com",
+	// 					"name": "Play Safeway monopoly together",
+	// 					"type": "to"
+	// 				}
+	// 			],
+	// 			"important": false,
+	// 			"track_opens": null,
+	// 			"track_clicks": null,
+	// 			"auto_text": null,
+	// 			"auto_html": null,
+	// 			"inline_css": null,
+	// 			"url_strip_qs": null,
+	// 			"preserve_recipients": null,
+	// 			"view_content_link": null,
+	// 			"tracking_domain": null,
+	// 			"signing_domain": null,
+	// 			"return_path_domain": null
+	// 		},
+	// 		"async": false,
+	// 		"ip_pool": "Main Pool"
+	// 	};
+	// 	var apiURL = "https://mandrillapp.com/api/1.0/messages/send.json";
+	// 	$http.post(apiURL, mailJSON).
+	// 	success(function(data, status, headers, config) {
+	// 		//alert('successful email send.');
+	// 		$scope.form={};
+	// 		console.log('successful email send.');
+	// 		console.log('status: ' + status);
+	// 		console.log('data: ' + data);
+	// 		console.log('headers: ' + headers);
+	// 		console.log('config: ' + config);
+	// 	}).error(function(data, status, headers, config) {
+	// 		console.log('error sending email.');
+	// 		console.log('status: ' + status);
+	// 	});
+	// }
+
+	$scope.updateTicketStatus = function(ticket) {
+		ticket.status = !ticket.status;
+		if((ticket.status || ticket.extra > 0 ) && rare_tickets.indexOf(ticket.code) != -1 ) {
+			sendEmail(ticket);
+		}
+		$scope.userBoard.$save();
 	}
 
 	$scope.saveProfile = function() {

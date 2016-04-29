@@ -342,6 +342,11 @@
 								</tr>
 							</thead>
 							<tbody>
+								<tr ng-if="usersWithExtraTickets.results.length === 0">
+									<td>
+										Wait...searching....
+									</td>
+								</tr>
 								<tr ng-repeat="result in usersWithExtraTickets.results | filter:{$: searchText} | orderBy: 'ticket.code'">
 									<td>
 										{{$index + 1}}

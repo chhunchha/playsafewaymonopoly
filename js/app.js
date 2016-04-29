@@ -32,7 +32,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 			getUserBoardData();
 			//$location.path("/authenticated");
 		}
-		if(debug) console.log($scope.authData);
+		log($scope.authData);
 	});
 
 	$scope.login = function(provider) {
@@ -44,6 +44,10 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 
 	$scope.logout = function() {
 		Auth.$unauth();
+	}
+
+	var log = function(msg) {
+		if(debug) console.log(msg);
 	}
 
 	var createUser = function() {
@@ -58,7 +62,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 				$scope.user = $firebaseObject(userRef.child($scope.authData.uid));
 			}
 			else {
-				if(debug) console.log("User already exists");
+				log("User already exists");
 				$scope.user = $firebaseObject(userRef.child($scope.authData.uid));
 			}
 		});
@@ -89,7 +93,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$scope.creteBoardForUser = function() {
 		boardsRef.child($scope.authData.uid).on("value", function(snapshot){
 			if(snapshot.val() !== null) {
-				if(debug) console.log("board exists for user");
+				log("board exists for user");
 			} else {
 				defaultBoardRef.on("value", function(snapshot){
 					var data = snapshot.val();
@@ -97,11 +101,11 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 						data
 					});
 				}, function(errorObject) {
-					if(debug) console.log("failed to read default board");
+					log("failed to read default board");
 				})
 			}
 		}, function(errorObject) {
-			if(debug) console.log("failed to read board for user");
+			log("failed to read board for user");
 		});
 	}
 
@@ -150,36 +154,40 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 
 // curl -s 'https://api:key-126248d42ef9442a93b9704cc128e3d3@api.mailgun.net/v3/sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org/messages' -F from='postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org' -F to='mr.chhunchha@gmail.com' -F subject='Hello' -F text='Testing some Mailgun awesomness!'
 
-
-		var method = 'POST';
-		var url = "https://api:key-126248d42ef9442a93b9704cc128e3d3@api.mailgun.net/v3/sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org/messages";
-		var mailJSON = {
+		var url = "https://api.mailgun.net/v3/sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org/messages";
+		var dataJSON = {
 			to: "mr.chhunchha@gmail.com",
 			subject: "Alert: " + ticket.code + " found",
 			text: "Alert: " + ticket.code + " found",
 			from: "Play safeway monopoly <postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org>"
 		}
-		//
-		//
-		// $http({
-		//    method: method,
-		//    url: url +
-		// 	   "to=" + "mr.chhunchha@gmail.com" +
-		// 	   "&subject=" + "Alert: " + ticket.code + " found" +
-		// 	   "&text=" + "Alert: " + ticket.code + " found" +
-		// 	   "&from=" + "postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org"
-		// }).
-		$http.post(url, mailJSON).
-		success(function(data, status) {
+
+		var req = {
+			method : 'POST',
+			url: url,
+			headers : {
+				'Authorization' : 'Basic api:key-126248d42ef9442a93b9704cc128e3d3'
+			},
+			data: dataJSON
+		}
+		$http(req).then(function(data){
 			console.log(data);
-			console.log(status);
-		}).
-		error(function(data, status) {
+		}, function(data){
 			console.log(data);
-			console.log(status);
-		});
+		})
 	}
 
+
+	//
+	//
+	// $http({
+	//    method: method,
+	//    url: url +
+	// 	   "to=" + "mr.chhunchha@gmail.com" +
+	// 	   "&subject=" + "Alert: " + ticket.code + " found" +
+	// 	   "&text=" + "Alert: " + ticket.code + " found" +
+	// 	   "&from=" + "postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org"
+	// }).
 	// var sendEmail = function(ticket) {
 	// 	var mailJSON ={
 	// 		"key": "8wLNsT_uBLlbeVlwwaeTyQ",
@@ -260,7 +268,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 				}
 			}
 		}
-		if(debug) console.log($scope.missingTickets);
+		log($scope.missingTickets);
 	}
 
 	$scope.usersWithExtraTickets = {results: []};
@@ -283,7 +291,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 										for(var t in prize.tickets)
 										{
 											var ticket = prize.tickets[t];
-											// if(debug) console.log(ticket.code , ticketCode);
+											// log(ticket.code , ticketCode);
 
 											if(ticket.code === ticketCode && ticket.extra > 0 ) {
 												$scope.usersWithExtraTickets.results.push({prize: prize, ticket: ticket, user: $firebaseObject(userRef.child(cityUser.user))});
@@ -291,7 +299,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 										}
 									}
 								}
-								if(debug) console.log($scope.usersWithExtraTickets.results);
+								log($scope.usersWithExtraTickets.results);
 							}
 						)
 					}, $scope);
@@ -325,7 +333,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 								for(var t in prize.tickets)
 								{
 									var ticket = prize.tickets[t];
-									// if(debug) console.log(ticket.code , ticketCode);
+									// log(ticket.code , ticketCode);
 
 									if(ticket.code === ticketCode && (ticket.extra > 0 || ticket.status == true)) {
 										$scope.usersWithExtraTickets.results.push({prize: prize, ticket: ticket, user: $firebaseObject(userRef.child(userBoard.$id))});
@@ -412,7 +420,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 			if(foundAllMissing) {
 				$scope.prizesCouldBeWon.push(prize);
 			}
-			console.log($scope.prizesCouldBeWon);
+			//console.log($scope.prizesCouldBeWon);
 		}
 	}
 

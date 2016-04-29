@@ -9,8 +9,8 @@ var defaultBoardRef = new Firebase(appURL + "/default_board")
 var cityUsers = new Firebase(appURL + "/city_users");
 
 var rare_tickets = "$618H,?625G,A502C,B506B,C513D,D515A,E524D,F528C,Z608B,Y603A,X602D,W597C,V592B,U590D,T585C,S579A,R575A,Q573C,P568B,O565C,N562D,M556B,L551A,K549C,G531A,H538D,I541C,J544B,$613C,?622D,A504E,B505A,C514E,D517C,E525E,F527B";
-PlayCntrl.$inject = ['$scope', 'Auth', '$location', '$firebaseObject', '$http', '$firebaseArray', '$q'];
-function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArray, $q){
+PlayCntrl.$inject = ['$scope', 'Auth', '$location', '$firebaseObject', '$http', '$firebaseArray', '$q','$base64'];
+function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArray, $q, $base64){
 	$scope.provider = '';
 	$scope.authData;
 	$scope.userBoard;
@@ -154,27 +154,36 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 
 // curl -s 'https://api:key-126248d42ef9442a93b9704cc128e3d3@api.mailgun.net/v3/sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org/messages' -F from='postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org' -F to='mr.chhunchha@gmail.com' -F subject='Hello' -F text='Testing some Mailgun awesomness!'
 		//
-		// var url = "https://api.mailgun.net/v3/sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org/messages";
-		// var dataJSON = {
-		// 	to: "mr.chhunchha@gmail.com",
-		// 	subject: "Alert: " + ticket.code + " found",
-		// 	text: "Alert: " + ticket.code + " found",
-		// 	from: "Play safeway monopoly <postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org>"
-		// }
-		//
-		// var req = {
-		// 	method : 'POST',
-		// 	url: url,
-		// 	headers : {
-		// 		'Authorization' : 'Basic api:key-126248d42ef9442a93b9704cc128e3d3'
-		// 	},
-		// 	data: dataJSON
-		// }
-		// $http(req).then(function(data){
-		// 	console.log(data);
-		// }, function(data){
-		// 	console.log(data);
-		// })
+		var url = "https://api.mailgun.net/v3/sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org/messages";
+		var dataJSON = {
+			from: "postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org",
+			to: "mr.chhunchha@gmail.com",
+			subject: "Alert: " + ticket.code + " found",
+			text: "Alert: " + ticket.code + " found",
+			multipart: true
+		}
+
+		var req = {
+			method : 'POST',
+			url: url,
+			headers : {
+				// "h:X-My-Header": "www/mailgun-email-send",
+				'content-type': 'application/x-www-form-urlencoded',
+				'Authorization': 'Basic ' + $base64.encode('api:key-126248d42ef9442a93b9704cc128e3d3')
+			},
+			transformRequest: function(obj) {
+				var str = [];
+				for(var p in obj)
+				str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+				return str.join("&");
+			},
+			data: dataJSON
+		}
+		$http(req).then(function(data){
+			console.log(data);
+		}, function(data){
+			console.log(data);
+		})
 	}
 
 	$scope.updateTicketStatus = function(ticket) {
@@ -406,7 +415,7 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 	$("#info-help-body").append(infoTemplate);
 };
 
-var app = angular.module("playsafewaymonopoly", ["firebase","ngRoute","customFilter","angular-toArrayFilter","ngAutocomplete"]);
+var app = angular.module("playsafewaymonopoly", ["firebase","ngRoute","customFilter","angular-toArrayFilter","ngAutocomplete","base64"]);
 
 app.config(['$routeProvider', '$locationProvider',function($routeProvider, $locationProvider){
 	$routeProvider

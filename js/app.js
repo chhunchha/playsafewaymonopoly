@@ -153,88 +153,29 @@ function PlayCntrl($scope, Auth, $location, $firebaseObject, $http, $firebaseArr
 // -F text='Testing some Mailgun awesomness!'
 
 // curl -s 'https://api:key-126248d42ef9442a93b9704cc128e3d3@api.mailgun.net/v3/sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org/messages' -F from='postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org' -F to='mr.chhunchha@gmail.com' -F subject='Hello' -F text='Testing some Mailgun awesomness!'
-
-		var url = "https://api.mailgun.net/v3/sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org/messages";
-		var dataJSON = {
-			to: "mr.chhunchha@gmail.com",
-			subject: "Alert: " + ticket.code + " found",
-			text: "Alert: " + ticket.code + " found",
-			from: "Play safeway monopoly <postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org>"
-		}
-
-		var req = {
-			method : 'POST',
-			url: url,
-			headers : {
-				'Authorization' : 'Basic api:key-126248d42ef9442a93b9704cc128e3d3'
-			},
-			data: dataJSON
-		}
-		$http(req).then(function(data){
-			console.log(data);
-		}, function(data){
-			console.log(data);
-		})
+		//
+		// var url = "https://api.mailgun.net/v3/sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org/messages";
+		// var dataJSON = {
+		// 	to: "mr.chhunchha@gmail.com",
+		// 	subject: "Alert: " + ticket.code + " found",
+		// 	text: "Alert: " + ticket.code + " found",
+		// 	from: "Play safeway monopoly <postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org>"
+		// }
+		//
+		// var req = {
+		// 	method : 'POST',
+		// 	url: url,
+		// 	headers : {
+		// 		'Authorization' : 'Basic api:key-126248d42ef9442a93b9704cc128e3d3'
+		// 	},
+		// 	data: dataJSON
+		// }
+		// $http(req).then(function(data){
+		// 	console.log(data);
+		// }, function(data){
+		// 	console.log(data);
+		// })
 	}
-
-
-	//
-	//
-	// $http({
-	//    method: method,
-	//    url: url +
-	// 	   "to=" + "mr.chhunchha@gmail.com" +
-	// 	   "&subject=" + "Alert: " + ticket.code + " found" +
-	// 	   "&text=" + "Alert: " + ticket.code + " found" +
-	// 	   "&from=" + "postmaster@sandbox8fdcaab93be5418c82af52d73590aa18.mailgun.org"
-	// }).
-	// var sendEmail = function(ticket) {
-	// 	var mailJSON ={
-	// 		"key": "8wLNsT_uBLlbeVlwwaeTyQ",
-	// 		"message": {
-	// 			"html": "Alert: " + ticket.code + " found",
-	// 			"text": "Alert: " + ticket.code + " found",
-	// 			"subject": "Alert: " + ticket.code + " found",
-	// 			"from_email": "playsafewaymonopolytogether@gmail.com",
-	// 			"from_name": "Play safeway monopoly together",
-	// 			"to": [
-	// 				{
-	// 					"email": "mr.chhunchha@gmail.com",
-	// 					"name": "Play Safeway monopoly together",
-	// 					"type": "to"
-	// 				}
-	// 			],
-	// 			"important": false,
-	// 			"track_opens": null,
-	// 			"track_clicks": null,
-	// 			"auto_text": null,
-	// 			"auto_html": null,
-	// 			"inline_css": null,
-	// 			"url_strip_qs": null,
-	// 			"preserve_recipients": null,
-	// 			"view_content_link": null,
-	// 			"tracking_domain": null,
-	// 			"signing_domain": null,
-	// 			"return_path_domain": null
-	// 		},
-	// 		"async": false,
-	// 		"ip_pool": "Main Pool"
-	// 	};
-	// 	var apiURL = "https://mandrillapp.com/api/1.0/messages/send.json";
-	// 	$http.post(apiURL, mailJSON).
-	// 	success(function(data, status, headers, config) {
-	// 		//alert('successful email send.');
-	// 		$scope.form={};
-	// 		console.log('successful email send.');
-	// 		console.log('status: ' + status);
-	// 		console.log('data: ' + data);
-	// 		console.log('headers: ' + headers);
-	// 		console.log('config: ' + config);
-	// 	}).error(function(data, status, headers, config) {
-	// 		console.log('error sending email.');
-	// 		console.log('status: ' + status);
-	// 	});
-	// }
 
 	$scope.updateTicketStatus = function(ticket) {
 		ticket.status = !ticket.status;
